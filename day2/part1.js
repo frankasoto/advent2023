@@ -1,8 +1,11 @@
 const fs = require('fs');
+const path = require('path');
 
-const fh = fs.readFileSync('./input.txt', 'utf-8');
+const filename = path.join(__dirname, './input.txt');
+// console.log('file', filename);
+const fh = fs.readFileSync(filename, 'utf-8');
 
-// let file = fh.split(':')
+let file = fh.split(':')
 
 // file = file.join('').split('\n');
 let colors = {
@@ -18,8 +21,8 @@ const values = {
 }
 
 let sum = 0;
-console.log('game', file[99])
-for (let i = 1; i < file.length; i += 2) {
+console.log('game', file[0])
+for (let i = 1; i < file.length; i += 1) {
   let game = file[i];
   let number = '';
 
@@ -33,6 +36,7 @@ for (let i = 1; i < file.length; i += 2) {
     let selectedColor = colors[game[j]];
 
     if (values.hasOwnProperty(selectedColor)) {
+      // console.log('color', selectedColor, '::: value', values[selectedColor], 'found:', Number(number));
 
       if (Number(number) <= values[selectedColor]) {
 
@@ -44,7 +48,7 @@ for (let i = 1; i < file.length; i += 2) {
 
     if (j === (game.length - 1)) {
 
-      sum += (i - 1);
+      sum += i;
     }
 
 
