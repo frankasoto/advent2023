@@ -15,62 +15,69 @@ In this example, the calibration values are 29, 83, 13, 24, 42, 14, and 76. Addi
 What is the sum of all of the calibration values? */
 
 const fs = require('fs');
+const path = require('path');
+const fh = path.join(__dirname, './input.txt');
 
-const file = fs.readFileSync('./input.txt', 'utf-8');
+const file = fs.readFileSync(fh, 'utf-8');
+
+const letterNums = {
+  'one': 1,
+  'two': 2,
+  'three': 3,
+  'four': 4,
+  'five': 5,
+  'six': 6,
+  'seven': 7,
+  'eight': 8,
+  'nine':9
+}
+// console.log('file', file);
+//55, 94, 21, 53
+// console.log('line', file.split('\n')[0]);
 let fileArr = file.split('\n');
-
 function calibrator(text) {
   let sum = 0;
-
-  // Mapping of spelled-out digits to numeric values
-  const digitMapping = {
-    one: '1',
-    two: '2',
-    three: '3',
-    four: '4',
-    five: '5',
-    six: '6',
-    seven: '7',
-    eight: '8',
-    nine: '9',
-  };
-
+  // const charCode = line.charCodeAt(letter) >= 48 && line.charCodeAt(letter) <= 57;
   for (let lines = 0; lines < text.length; lines += 1) {
-    let line = text[lines];
     let numString = '';
+    let line = text[lines];
 
     for (let letter = 0; letter < line.length; letter += 1) {
-      let currentSubstring = '';
-      let remainingSubstring = line.substring(letter);
-
-      // Try to find a match for a spelled-out digit with increasing substring lengths
-      for (let i = 1; i <= remainingSubstring.length; i++) {
-        currentSubstring = remainingSubstring.substring(0, i);
-
-        if (digitMapping[currentSubstring]) {
-          numString += digitMapping[currentSubstring];
-          letter += i - 1; // Move the letter index to the end of the spelled-out digit
-          break;
-        }
+      let threeSub = line.substring(letter, letter + 3);
+      let fourSub = line.substring(letter, letter + 4);
+      let fiveSub = line.substring(letter, letter + 5);
+      if (letterNums.hasOwnProperty(threeSub)) {
+        numString += letterNums[threeSub];
+      } else if (letterNums.hasOwnProperty(fourSub)) {
+        numString += letterNums[fourSub];
+      } else if (letterNums.hasOwnProperty(fiveSub)) {
+        numString += letterNums[fiveSub];
       }
 
-      if (!digitMapping[currentSubstring] && !isNaN(line[letter])) {
-        // Check if the character is a numeric digit
+      if (!isNaN(line[letter])) {
         numString += line[letter];
       }
     }
-
-    if (numString.length === 1) {
-      // If there's only one digit, add it to the sum
-      sum += Number(numString);
-    } else if (numString.length >= 2) {
-      // Take the first and last digits and form a two-digit number
+    if (numString.length > 1) {
+      // console.log('numString')
       let num = numString[0] + numString[numString.length - 1];
       sum += Number(num);
     }
+    else {
+      // console.log('false');
+      let num = numString[0] + numString[0];
+      // console.log('numString', num);
+      sum += Number(numString[0] + numString[0]);
+    }
+    if (isNaN(sum)) {
+      console.log('true', lines)
+    }
+
+
   }
 
   return sum;
-}
 
-console.log(calibrator(fileArr));
+}
+let sum = calibrator(fileArr);
+console.log('sum', sum);
